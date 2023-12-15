@@ -26,16 +26,16 @@ You can think of a runlevel as a preset of services that should be running (A st
 
 A **unit** is a resource that the system knows how to manage, consisting of a **name**, **type** and **configuration file**.
 
-| Unit Type | Description                                                                                                                                                                                                                                                                                     |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Service   | 📌 A process that runs in the background and does not require user input. <br> 📌 Started when the system boots and runs until the system is shut down. <br> 📌 Can be started, stopped, restarted, reloaded, enabled, disabled, masked, and unmasked. <br> 📌 Is defined by a `.service` file. |
-| Target    | 📌 A group of other units. <br> 📌 Similar to a runlevel in SysV init. <br> 📌 can be started, stopped, enabled, disabled, and masked. <br> 📌 Is defined by a `.target` file.                                                                                                                  |
-| Device    | 📌 A physical or virtual hardware device. <br> 📌 Started when the system boots and runs until the system is shut down. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.device` file.                                                                    |
-| Mount     | 📌 A file system mount point. <br> 📌 Started when the system boots and runs until the system is shut down. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.mount` file.                                                                                 |
-| Automount | 📌 A file system mount point that is automatically mounted when accessed. <br> 📌 Started when the system boots and runs until the system is shut down. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.automount` file.                                 |
-| Path      | 📌 A file or directory in a file system. <br> 📌 Started when the system boots and runs until the system is shut down. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.path` file.                                                                       |
-| Socket    | 📌 A communication endpoint. <br> 📌 Started when the system boots and runs until the system is shut down. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.socket` file.                                                                                 |
-| Snapshot  | 📌 A saved state of the systemd manager configuration. <br> 📌 Not started when the system boots. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.snapshot` file.                                                                                        |
+| Unit Type | Description                                                                                                                                                                                                       |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Service   | 📌 A process that runs in the background and does not require user input. <br> 📌 Can be started, stopped, restarted, reloaded, enabled, disabled, masked, and unmasked. <br> 📌 Is defined by a `.service` file. |
+| Target    | 📌 A group of other units. <br> 📌 Similar to a runlevel in SysV init. <br> 📌 can be started, stopped, enabled, disabled, and masked. <br> 📌 Is defined by a `.target` file.                                    |
+| Device    | 📌 A physical or virtual hardware device. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.device` file.                                                                    |
+| Mount     | 📌 A file system mount point. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.mount` file.                                                                                 |
+| Automount | 📌 A file system mount point that is automatically mounted when accessed. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.automount` file.                                 |
+| Path      | 📌 A file or directory in a file system. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.path` file.                                                                       |
+| Socket    | 📌 A communication endpoint. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.socket` file.                                                                                 |
+| Snapshot  | 📌 A saved state of the systemd manager configuration. <br> 📌 Not started when the system boots. <br> 📌 Can be started, stopped, enabled, disabled, and masked. <br> 📌 Defined by a `.snapshot` file.          |
 
 The Linux system unit configuration files are located in the following directories
 
@@ -49,8 +49,8 @@ The Linux system unit configuration files are located in the following directori
 
 **Systemd** targets are similar to **SysV init** runlevels. They are a way to group services together. For example, the `multi-user.target` is the default target for servers and `graphical.target` is the default target for desktops.
 
-| Target Unit          | Corresponding Runlevel      | Description                                                                                                                                                                                                                          |
-| -------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Target Unit           | Corresponding Runlevel      | Description                                                                                                                                                                                                                          |
+| --------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **poweroff.target**   | analogous to runlevel **0** | 📌 Shuts down the system and powers off the machine <br> 📌 Similar to runlevel 0 in SysV init                                                                                                                                       |
 | **rescue.target**     | analogous to runlevel **1** | 📌 Starts the system in rescue mode <br> 📌 The root account is automatically logged in to the system <br> 📌 Other users can't log in <br> 📌 Only the command line interface is available <br> 📌 Network services are not started |
 | **multi-user.target** | analogous to runlevel **3** | 📌 Starts the system in multi-user mode <br> 📌 Users can log in to the system <br> 📌 Only the command line interface is available <br> 📌 Network services are started                                                             |
@@ -66,9 +66,72 @@ The default target is defined by a symbolic link at `/etc/systemd/system/default
 > NOTE
 >
 > Systemd will search for files in the following directories in the order listed below. If a file is found in an earlier directory, the file in the later directories will be ignored.
+>
 > 1. `/etc/systemd/system`
-> 3. `/usr/lib/systemd/system`
+> 2. `/usr/lib/systemd/system`
 
+## Systemd Unit Files
+
+**Systemd** uses **unit files** to describe units. Unit files are located in the `/etc/systemd/system` directory and the `/usr/lib/systemd/system` directory.
+
+**Systemd** unit files are written in the **INI** format. They consist of **sections** and **key-value pairs**.
+
+### Sections
+
+**Systemd** unit files consist of the following sections
+
+| Section     | Description                                                                                                              |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `[Unit]`    | 📌 General information about the unit <br> 📌 Contains directives that apply to the unit as a whole                      |
+| `[Service]` | 📌 Information about the service <br> 📌 Contains directives that apply to the service                                   |
+| `[Install]` | 📌 Information about the installation of the unit <br> 📌 Contains directives that apply to the installation of the unit |
+
+### Directives
+
+**Directives** are **key-value pairs** that are used to configure the unit.
+
+**Systemd** unit files consist of the following directives
+
+| Directive         | Description                                                                                                                                                                                                                                                                                                           |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Description`     | 📌 A human-readable description of the unit                                                                                                                                                                                                                                                                           |
+| `Documentation`   | 📌 A list of URIs to documentation about the unit                                                                                                                                                                                                                                                                     |
+| `Requires`        | 📌 A list of units that must be started before the unit is started <br> 📌 If any of the units listed in the `Requires` directive fail to start, the unit will fail to start                                                                                                                                          |
+| `Wants`           | 📌 A list of units that should be started before the unit is started <br> 📌 If any of the units listed in the `Wants` directive fail to start, the unit will still start                                                                                                                                             |
+| `wantedBy`        | 📌 Specifies which target unit should include or "want" the current unit                                                                                                                                                                                                                                              |
+| `Conflicts`       | 📌 A list of units that must not be started when the unit is started <br> 📌 If any of the units listed in the `Conflicts` directive are started, the unit will fail to start                                                                                                                                         |
+| `Before`          | 📌 A list of units that must be started before the unit is started <br> 📌 If any of the units listed in the `Before` directive fail to start, the unit will fail to start                                                                                                                                            |
+| `After`           | 📌 Is used to specify the units that should be started before the current unit <br> 📌 It does not start the specified units but affects the order in which units are activated                                                                                                                                       |
+| `OnFailure`       | 📌 A list of units that must be started when the unit fails to start <br> 📌 If any of the units listed in the `OnFailure` directive fail to start, the unit will still fail to start                                                                                                                                 |
+| `ExecStart`       | 📌 The command to execute to start the unit <br> 📌 Can be a path to an executable file or a shell command <br> 📌 Can be specified multiple times <br> 📌 If the command is a path to an executable file, the file must be executable <br> 📌 If the command is a shell command, the command must be quoted          |
+| `ExecStop`        | 📌 The command to execute to stop the unit <br> 📌 Can be a path to an executable file or a shell command <br> 📌 Can be specified multiple times <br> 📌 If the command is a path to an executable file, the file must be executable <br> 📌 If the command is a shell command, the command must be quoted           |
+| `ExecReload`      | 📌 The command to execute to reload the unit <br> 📌 Can be a path to an executable file or a shell command <br> 📌 Can be specified multiple times <br> 📌 If the command is a path to an executable file, the file must be executable <br> 📌 If the command is a shell command, the command must be quoted         |
+| `ExecStartPost`   | 📌 The command to execute after the unit is started <br> 📌 Can be a path to an executable file or a shell command <br> 📌 Can be specified multiple times <br> 📌 If the command is a path to an executable file, the file must be executable <br> 📌 If the command is a shell command, the command must be quoted  |
+| `Restart`         | 📌 Specifies when the unit should be restarted <br> 📌 Can be set to `no`, `on-success`, `on-failure`, `on-abnormal`, `on-abort`, `on-watchdog`, or `always` <br> 📌 Defaults to `no`                                                                                                                                 |
+| `TimeoutSec`      | 📌 Specifies the amount of time to wait before considering the unit to have failed to start or stop <br> 📌 Defaults to `DefaultTimeoutStartSec`                                                                                                                                                                      |
+| `RemainAfterExit` | 📌 Specifies whether the unit should be considered active after the unit has finished executing <br> 📌 Can be set to `yes` or `no` <br> 📌 Defaults to `no`                                                                                                                                                          |
+| `Alias`          | 📌 Systemd creates a symbolic link from the target unit names listed to this unit
+
+for detaild information you can check [systemd.unit manpage](https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html#AllowIsolate=)
+
+### Example
+
+```ini
+[Unit]
+Description=Apache Web Server
+
+[Service]
+ExecStart=/usr/sbin/httpd
+ExecReload=/usr/sbin/httpd -k graceful
+ExecStop=/usr/sbin/httpd -k graceful-stop
+Type=notify
+NotifyAccess=all
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+```
 
 ---
 
@@ -76,28 +139,36 @@ The default target is defined by a symbolic link at `/etc/systemd/system/default
 
 ## Commands cheat sheet
 
-| Command                                    | Usage                                                                                   |
-| ------------------------------------------ | --------------------------------------------------------------------------------------- |
-| `systemctl status <service>`               | 📌 Show status of service                                                               |
-| `systemctl start <service>`                | 📌 Start service                                                                        |
-| `systemctl stop <service>`                 | 📌 Stop service                                                                         |
-| `systemctl restart <service>`              | 📌 Restart service                                                                      |
-| `systemctl enable <service>`               | 📌 Enable service to start on boot                                                      |
-| `systemctl disable <service>`              | 📌 Disable service to start on boot                                                     |
-| `systemctl is-enabled <service>`           | 📌 Check if service is enabled                                                          |
-| `systemctl is-active <service>`            | 📌 Check if service is active                                                           |
-| `systemctl get-default`                    | 📌 Get default target (runlevel)                                                        |
-| `systemctl set-default <target>`           | 📌 Set default target (runlevel)                                                        |
-| `systemctl poweroff`                       | 📌 Shutdown system                                                                      |
-| `systemctl reboot`                         | 📌 Reboot system                                                                        |
-| `systemctl daemon-reload`                  | 📌 Reload systemd manager configuration                                                 |
-| `systemctl list-units`                     | 📌 List all currently active units                                                      |
-| `systemctl list-units --type=service`      | 📌 List all services                                                                    |
-| `systemctl list-unit-files`                | 📌 List all unit files present on the system, whether or not they are currently active. |
-| `systemctl list-unit-files --type=service` | 📌 List all service unit files                                                          |
-| `systemctl suspend`                        | 📌 Suspend system                                                                       |
-| `systemctl hibernate`                      | 📌 Hibernate system                                                                     |
-| `systemctl hybrid-sleep`                   | 📌 Hibernate system if supported, otherwise suspend system                              |
-| `systemctl mask <service>`                 | 📌 Mask service (disable service and create a symlink to `/dev/null`)                   |
-| `systemctl unmask <service>`               | 📌 Unmask service                                                                       |
-| `systemctl list-dependencies <service>`    | 📌 List dependencies of service                                                         |
+| Command                          | Usage                                                                 |
+| -------------------------------- | --------------------------------------------------------------------- |
+| `systemctl status <service>`     | 📌 Show status of service                                             |
+| `systemctl start <service>`      | 📌 Start service                                                      |
+| `systemctl stop <service>`       | 📌 Stop service                                                       |
+| `systemctl restart <service>`    | 📌 Restart service                                                    |
+| `systemctl enable <service>`     | 📌 Enable service to start on boot                                    |
+| `systemctl disable <service>`    | 📌 Disable service to start on boot                                   |
+| `systemctl is-enabled <service>` | 📌 Check if service is enabled                                        |
+| `systemctl is-active <service>`  | 📌 Check if service is active                                         |
+| `systemctl hybrid-sleep`         | 📌 Hibernate system if supported, otherwise suspend system            |
+| `systemctl mask <service>`       | 📌 Mask service (disable service and create a symlink to `/dev/null`) |
+| `systemctl unmask <service>`     | 📌 Unmask service                                                     |
+| `systemctl list-dependenc ies <service>`   | 📌 List dependencies of service                                                         |
+|`systemctl list-units --type=service`     | 📌 List all services                                                                    |
+|`systemctl list-unit-files`               | 📌 List all unit files present on the system, whether or not they are currently active. <br> 📌 Unit status can be either **static**, **enabled** or **disabled** <br> 📌 **enabled** - means that the unit is currently enabled <br> 📌 **disabled** - means that the unit is currently disabled <br> 📌 **static** - refers to **statically enabled** and means that the unit is enabled by default and can not be disabled, even by **root** |
+|`systemctl list-unit-files --type=service`| 📌 List all service unit files                                                          |
+|`systemctl poweroff`                      | 📌 Shutdown system                                                                      |
+|`systemctl reboot`                        | 📌 Reboot system                                                                        |
+|`systemctl daemon-reload`                 | 📌 Reload systemd manager configuration                                                 |
+|`systemctl list-units`                    | 📌 List all currently active units                                                      |
+|`systemctl suspend`                       | 📌 Suspend system                                                                       |
+|`systemctl hibernate`                     | 📌 Hibernate system                                                                     |
+|`systemctl get-default`                   | 📌 Get default target (runlevel)                                                        |
+|`systemctl set-default <target>`          | 📌 Set default target (runlevel)                                                        |
+|`runlevel`                                | 📌 Get current runlevel                                                                 |
+|`systemctl isolate <target>`                | 📌 Change to specified target (runlevel)                                                |
+|`systemctl show <unit> `| 📌 Show properties of unit                                                              |
+|`systemctl show --property <property> <unit>` | 📌 Show value of property of unit                                                       |
+|`systemctl cat <unit>`                    | 📌 Show unit file                                                                       |
+|`systemctl edit <unit>`                   | 📌 Edit unit file                                                                       |
+|`systemctl kill <unit>`                   | 📌 Send **default SIGTERM** signal to unit                                              |
+|`systemctl kill -s <signal> <unit>` | 📌 Send signal to unit |

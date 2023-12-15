@@ -15,5 +15,4 @@ You can navigate through the topics using the table of contents.
 ## Table of Contents 📑
 | Topic | Description |
 | :--- | :--- |
-| **Systemd** | 📌 Commands Cheat Sheet|
-<!-- | **Systemd** | 📌 [Commands Cheat Sheet](./systemd/README.md#commands-cheat-sheet) | -->
+| **Systemd** | 📌 [Commands Cheat Sheet](./systemd/README.md#commands-cheat-sheet) |

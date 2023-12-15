@@ -13,6 +13,7 @@ If you want to see the unfinised notes you can switch to the branch of the topic
 You can navigate through the topics using the table of contents.
 
 ## Table of Contents 📑
-| Topic | Description |
-| :--- | :--- |
-| **Systemd** | 📌 [Commands Cheat Sheet](./systemd/README.md#commands-cheat-sheet) |
+
+| Topic       | Description                                                                                                                                                                                                                                                                                                                    |
+| :---------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Systemd** | 📌 [Runlevels](./systemd/README.md#runlevels) <br> 📌 [Systemd Unit Types](./systemd/README.md#systemd-unit-types) <br> 📌 [Systemd Targets](./systemd/README.md#systemd-targets) <br> 📌 [Systemd Unit Files](./systemd/README.md#systemd-unit-files) <br>📌 [Commands Cheat Sheet](./systemd/README.md#commands-cheat-sheet) |
